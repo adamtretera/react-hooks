@@ -327,12 +327,67 @@ function Menu() {
 
 --- 
 
+# Cvičení 4.
+- toto odevzdejte na konci hodiny nebo dodělejte doma
+- nestylujte, pouze vytvořte jednoduché JSX komponenty a pak je vykreslete na stránku
+<div className="flex justify-center">
+  <img className="w-1/2 mt-4 rounded-md	" src="/images/kittens-components.png"/>
+</div>
+---
+
 # Vytvoření realného projektu
 - Pokud nemáte node nainstalujte si [Node](https://nodejs.org/en/download/)
 - Ze začátku budeme používat CRU (create-react-app) 
 - později [Next.js](https://nextjs.org/)
 - vytvořte si složku v pc např. `react-projects` 
+- v příkazovém řádku běžte do té složky
 
 ```
 npx create-react-app nazevMeAppky --template typescript
+```
+- po dokončení otevřte složku `nazevMeAppky` podle toho jak jste si jí pojmenovali v nějakém IDE (vs-code, WebStorm)
+- `npm start` - pomoci příkazu spustíte applikaci
+- pokud vše v pořádku aplikace běží na `http://localhost:3000/`
+
+
+--- 
+
+# Vyčištění projektu
+- projdeme si na hodině
+- smažte soubory `reportWebVitals.ts`, `App.test.tsx`, `setupTests.tsx`
+```tsx
+import React from 'react';
+import './App.css';
+
+function App() {
+  return (
+    <div>
+        <h1>Ahoj Reacte</h1>
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+# Vlastnosti (`props`)
+- první parametr React komponentu (funkce)
+- můžou být cokoliv (čísla, pole, objekty..)
+
+```tsx
+function Add(props) {
+  return (
+    <div>
+      {props.n1} + {props.n2} = {props.n1 + props.n2}
+    </div>
+  )
+}
+```
+
+- podobně jako v javascriptu
+```ts
+add(2,4)
+<Add n1={2} n2={3} />
 ```
