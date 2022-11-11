@@ -677,3 +677,8 @@ const users = [
 
 ---
 
+# Úkol 
+- předělejte aplikaci knihovny pomocí `props`
+- nestylujte
+- odevzdejte na classroom
+
