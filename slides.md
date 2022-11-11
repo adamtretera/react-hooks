@@ -651,31 +651,38 @@ const users = [
 
 ---
 
+
 # Nebo
 
 
 ```tsx
- <section>
-      <h1>Soupis uživatelů</h1>
-      {users.map(({name, age}) => <User name={name} age={age}/>)}
-      {/* Nyní je user objekt */}
- </section>
+function UserList() {
+  return (
+  <section>
+        <h1>Soupis uživatelů</h1>
+        {users.map(({name, age}) => <User name={name} age={age}/>)}
+        {/* Nyní je user objekt */}
+  </section>
+  )
+}
 
- ```
+```
 
-- pomocí spreadu
+```tsx
+function UserList() {
+  return (
+  <section>
+        <h1>Soupis uživatelů</h1>
+        {users.map((user) => <User {...user}/>)}
+        {/* Nyní je user objekt */}
+  </section>
+  )
+}
 
- ```tsx
- <section>
-      <h1>Soupis uživatelů</h1>
-      {users.map((user) => <User {...user}/>)}
-      {/* Nyní je user objekt */}
- </section>
- 
- ```
-
+```
 
 ---
+
 
 # Úkol 
 - předělejte aplikaci knihovny pomocí `props`
