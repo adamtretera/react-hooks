@@ -391,3 +391,289 @@ function Add(props) {
 add(2,4)
 <Add n1={2} n2={3} />
 ```
+
+---
+
+# Jak to může vypadat ? 
+
+- modifikátory komponenty
+ 
+```tsx
+
+// Komponenta
+function Person(props) {
+  return <h1>{props.title}</h1>;
+}
+
+export default function App() {
+  return (
+    <main>
+      <Person title="Petr Rychlý" />
+      <Person title="Mike Ross" />
+      <Person title="Harvy Specter" />
+    </main>
+  );
+}
+
+```
+
+---
+
+# Více props
+
+```tsx
+function Cat(props) {
+  return (
+    <div>
+      <h1>{props.name}</h1>
+      <img src={props.imageUrl} alt={props.name} />
+    </div>
+  );
+}
+
+```
+- použití
+```tsx
+    <Cat name="Petr" imageUrl="http://placekitten.com/200/300" />
+    <Cat name="Mike" imageUrl="http://placekitten.com/200/200" />
+```
+
+--- 
+
+# Zjednodušení
+
+```tsx
+// Komponenta
+function Cat(props) {
+  let name = props.name;
+  let imageUrl = props.imageUrl;
+
+  return (
+    <div>
+      <h1>{name}</h1>
+      <img src={imageUrl} alt={name} />
+    </div>
+  );
+}
+```
+
+
+---
+
+# Použití v praxi
+
+- [destruktulizovat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Unpacking_fields_from_objects_passed_as_a_function_parameter) už v parametru funkce
+```tsx
+function Cat({ name, imageUrl }) {
+  // ...
+}
+
+- defaultní hodnota
+function Cat({ name = "Anonymní kočička", imageUrl }) {
+  // ...
+}
+```
+- v moment, kdy použiju funkci a nespecifikuju `name`, použije se jako defaultní argument tato hodnota
+  
+```tsx
+    <Cat imageUrl="http://placekitten.com/200/300" />
+```
+
+---
+
+# Použití s typescriptem
+
+```tsx
+// vytvořím interface s názvem CatPropsTypes
+interface CatPropsTypes {
+  name: string;
+  imageUrl: string;
+}
+
+// Funguje stejně jako v klasickém typescriptu
+function Cat({ name, imageUrl }: CatPropsTypes) {
+  return (
+    <div>
+      <h1>{name}</h1>
+      <img src={imageUrl} alt={name} />
+    </div>
+  );
+}
+
+```
+
+---
+
+# Children (obalování jiných komponent)
+
+```tsx
+function Card({ children }) {
+  return (
+    <article className="card">
+      {children}
+    </article>
+  );
+}
+```
+
+- přidáme typescript
+
+```tsx
+import type { ReactNode } from "react"
+// ReactNode není primitvní typ jedná se o typ, přímo z knihovny React
+
+interface CardPropsTypes {
+  children: ReactNode
+}
+
+function Card({ children }: CardPropsTypes) {
+// ...
+}
+
+```
+
+
+---
+
+# Úkol 
+- Vytvořte novou React aplikaci (pokud nemáte)
+- vytvořte komponentu `Card`, která bude jen obalovat všechny vaše kartičky
+- dále vytvořte komponentu `UserCard`
+- dále vytvořte kompnentu `BookCard` 
+- stylování řešit nemusíte
+<div className="flex justify-center">
+  <img className="w-1/2 rounded-md	" src="/images/ukol-knihovna.png"/>
+</div>
+
+
+---
+
+# Tips
+
+- template literal
+```tsx
+function Header({ title }) {
+  return <h1>{`Cool ${title}`}</h1>;
+}
+```
+
+- funkce mimo komponentu
+  
+```tsx
+function generateRandomName(title) {
+//... logika pro vrácení náhodného jména
+}
+
+function UserProfil() {
+  return <h1>{generateRandomName()}</h1>;
+}
+```
+
+---
+
+# Zpracování pole v Reactu
+- velmi důležité
+- často vám přijde ze serveru hodně dat, toto jsou z 90% pole
+- v `Reactu` chceme např. pro každou položku v poli vykreslit komponent
+
+
+```tsx
+const users = ["Petr", "Lukáš", "Šimon", "Jenda"];
+```
+
+- cílem je vykresil několik komponent
+
+```tsx 
+function UserList() {
+  return (
+    <section>
+      <h1>Soupis uživatelů</h1>
+      {users.map((name) => (
+        <h5>{name}</h5>
+      ))}
+    </section>
+  );
+}
+```
+
+---
+
+# Pomocí komponenty
+
+```tsx
+const users = ["Petr", "Lukáš", "Šimon", "Jenda"];
+
+function User({ name }) {
+  return <h1>{`Epic ${name}`}</h1>;
+}
+```
+
+```tsx 
+function UserList() {
+  return (
+    <section>
+      <h1>Soupis uživatelů</h1>
+      {users.map((user) => <User name={name}/>)}
+    </section>
+  );
+}
+```
+
+---
+
+# Array of Objects
+
+```tsx
+const users = [
+  {
+    name: "Mike Ross",
+    age: 13,
+    img: "https://placem.at/people?w=200"
+  },
+  {
+    name: "Petr Mára",
+    age: 49,
+    img: "https://placem.at/people?w=200"
+  }
+];
+
+```
+
+- velmi časté
+
+```tsx
+ <section>
+      <h1>Soupis uživatelů</h1>
+      {users.map((user) => <User name={user.name} age={user.age}/>)}
+      {/* Nyní je user objekt */}
+ </section>
+```
+
+---
+
+# Nebo
+
+
+```tsx
+ <section>
+      <h1>Soupis uživatelů</h1>
+      {users.map(({name, age}) => <User name={name} age={age}/>)}
+      {/* Nyní je user objekt */}
+ </section>
+
+ ```
+
+- pomocí spreadu
+
+ ```tsx
+ <section>
+      <h1>Soupis uživatelů</h1>
+      {users.map((user) => <User {...user}/>)}
+      {/* Nyní je user objekt */}
+ </section>
+ 
+ ```
+
+
+---
+
