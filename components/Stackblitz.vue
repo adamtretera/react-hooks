@@ -12,6 +12,7 @@ const props = defineProps({
 	view: {
 		type: String as PropType<STACKBLITZ_VIEW>,
 	},
+	console: Boolean,
 	openFiles: {
 		type: Array<string>,
 		default: ["index.tsx"],
@@ -19,7 +20,7 @@ const props = defineProps({
 });
 
 const view = props.view ? `&view={${props.view}}` : "";
-
+const console = props.view ? `&devToolsHeight=33` : "";
 const filesString = props.openFiles
 	.map((item, index) => {
 		return `${index + 1}&file=${item}`;
@@ -31,7 +32,12 @@ const filesString = props.openFiles
 	<iframe
 		class="w-full"
 		:src="
-			`https://stackblitz.com/edit/` + source + `?embed=` + filesString + view
+			`https://stackblitz.com/edit/` +
+			source +
+			`?embed=` +
+			filesString +
+			view +
+			console
 		"
 		frameborder="0"
 		:height="height"

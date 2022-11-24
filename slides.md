@@ -706,41 +706,100 @@ function UserList() {
 
 ---
 
-# ES modules (import / export) 
-- výhoda komponent zpočívá v 
-<Stackblitz source="react-ts-9vu6vd" view="preview"/>
+# Eventy ()
+- podobně jako v javascriptu
+<Stackblitz source="react-ts-lh5sdl" :openFiles="[`components/Buttons.tsx`]" />
+
+---
+
+
+# Posílání eventů (e)
+<Stackblitz source="react-ts-lh5sdl" console :openFiles="[`components/Inputs.tsx`]" />
+
+
+
 
 
 ---
 
-```tsx
 
-function MovieGallery() {
-  return (
-    <section>
-      <h1>Movies</h1>
-      <Movie
-        imageUrl={'https://api.lorem.space/image/movie?w=150&h=220&hash=8B7'}
-      />
-      <Movie
-        imageUrl={'https://api.lorem.space/image/movie?w=150&h=220&hash=8B7BCD'}
-      />
-      <Movie
-        imageUrl={'https://api.lorem.space/image/movie?w=150&h=220&hash=8CD'}
-      />
-    </section>
-  );
-}
+# ES modules (import / export) 
 
+- Výhoda komponent spočívá v znovupoužitelnosti
+- Samozřejmě můžeme komponenty vytvářet v jednom souboru, ale jakmile začne aplikace růst je dobré si vymezit nějakou strukturu a dále pak rozdělovat komponenty do souborů.
+- To co si ukážeme funguje i v [JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+
+```ts
+// Exportujeme kus kódu (funkce, proměnná) ve složce components
+export function MojeKomponenta() {...}
+
+// Importuju tam, kde chci pracovat s komponentou
+import MojeKomponenta from "./components/MojeKomponenta"
+
+```
+
+- všimněte si že nemusím používat koncovku tsx
+
+
+---
+
+# Jak na to ? 
+
+
+<Stackblitz source="react-ts-9vu6vd" :openFiles="[`App.tsx`]" />
+
+
+---
+
+
+# Typy exportu a importu
+
+- `default` 
+- nemůžou být dva v souboru
+```ts
+export default const SuperKomponenta = () => {...} // ve složce components
+import SuperKomponenta "./components/SuperKomponenta" 
+```
+
+- `named`
+
+```ts
+export const SuperKomponenta = () => {...} // ve složce components
+export const SuperKomponenta2 = () => {...} // ve složce components
+
+import {SuperKomponenta, SuperKomponenta2} "./components/SuperKomponenta" 
 
 
 ```
 
 ---
-layout: center
+
+# Příklad
+
+<Stackblitz source="react-ts-z4b7lu" :openFiles="[`components/MoveList.tsx`]" />
+
+
+
+
+
 ---
 
-# State
 
+
+# Úkol
+- vytvořte appku v reactu
+- v nově vzniklé složce `components` vytvořte 4 komponety (Header, Footer, Button, Input)`
+- všechny importujte do hlavní komponenty - (2 defaultně, a 2 pomocí named importu)
+- Button by měl po kliknutí - otevřít alert okno
 
 ---
+
+# State (hooks)
+- Největší funkce Reactu = re-rendering (překreslení stránky)
+- Často se stane, že se nějaký stav v aplikaci bude měnit a vy budete chtít, aby si ten stav zapamatoval a nepřekresloval celou stránku.
+
+<Stackblitz source="react-ts-bdfysz" view="preview" height="300" :openFiles="[`components/State.tsx`]" />
+
+---
+
+
