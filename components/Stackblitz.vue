@@ -20,7 +20,7 @@ const props = defineProps({
 });
 
 const view = props.view ? `&view={${props.view}}` : "";
-const console = props.view ? `&devToolsHeight=33` : "";
+const console = props.console ? `&devToolsHeight=33` : "";
 const filesString = props.openFiles
 	.map((item, index) => {
 		return `${index + 1}&file=${item}`;
