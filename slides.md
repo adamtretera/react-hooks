@@ -708,7 +708,7 @@ function UserList() {
 
 # ES modules (import / export) 
 - výhoda komponent zpočívá v 
-<Stackblitz source="react-ts-9vu6vd"/>
+<Stackblitz source="react-ts-9vu6vd" view="preview"/>
 
 
 ---
