@@ -52,7 +52,7 @@ layout: center
 *Stromová struktura (měli by jste znát z Datových struktur)*
 
 - Slouží nám k tomu, aby jsme mohli měnit styly, strukturu a obsah stránek
-- nebo poslouchat na nějaké eventy
+- nebo poslouchat na nějké eventy
 - 
 # Vyzkoušet ? ✍️  
 - To co vidíte v devtools je DOM
@@ -108,7 +108,7 @@ layout: center
 ---
 
 # Proč ? 
-- React je nejpoužívanější framework, ale under the hood stále používá základní [API](https://github.com/facebook/react/blob/48907797294340b6d5d8fecfbcf97edf0691888d/packages/react-dom/src/client/ReactDOMComponent.js#L416) jako vy 
+- React je nejpoužívanější framwork, ale under the hood stále používá základní [API](https://github.com/facebook/react/blob/48907797294340b6d5d8fecfbcf97edf0691888d/packages/react-dom/src/client/ReactDOMComponent.js#L416) jako vy 
 - React přináší více declarativní přístup než imperativní browser api
 - **Deklarativní** Co ? - řeším jen výsledek
 ```js
@@ -554,7 +554,7 @@ function Card({ children }: CardPropsTypes) {
 - Vytvořte novou React aplikaci (pokud nemáte)
 - vytvořte komponentu `Card`, která bude jen obalovat všechny vaše kartičky
 - dále vytvořte komponentu `UserCard`
-- dále vytvořte komponentu `BookCard` 
+- dále vytvořte kompnentu `BookCard` 
 - stylování řešit nemusíte
 <div className="flex justify-center">
   <img className="w-1/2 rounded-md	" src="/images/ukol-knihovna.png"/>
@@ -628,7 +628,7 @@ function UserList() {
   return (
     <section>
       <h1>Soupis uživatelů</h1>
-      {users.map((name) => <User name={name}/>)}
+      {users.map((user) => <User name={name}/>)}
     </section>
   );
 }
@@ -708,7 +708,7 @@ function UserList() {
 
 # ES modules (import / export) 
 - výhoda komponent zpočívá v 
-
+<Stackblitz source="react-ts-9vu6vd"/>
 
 
 ---
