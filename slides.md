@@ -276,6 +276,13 @@ nebo pokud nechci obalovat do **div** mužu použít takzvaný react fragment
 - Vlastnosti (`props`)
 
 ---
+layout: center
+---
+
+# Komponenty
+
+
+---
 
 # Komponenty
 - základní stavební jednotka v Reactu
@@ -369,6 +376,14 @@ function App() {
 
 export default App;
 ```
+
+
+---
+layout: center
+---
+
+# Vlastnosti
+
 
 ---
 
@@ -689,3 +704,43 @@ function UserList() {
 - nestylujte
 - odevzdejte na classroom
 
+---
+
+# ES modules (import / export) 
+- výhoda komponent zpočívá v 
+
+
+
+---
+
+```tsx
+
+function MovieGallery() {
+  return (
+    <section>
+      <h1>Movies</h1>
+      <Movie
+        imageUrl={'https://api.lorem.space/image/movie?w=150&h=220&hash=8B7'}
+      />
+      <Movie
+        imageUrl={'https://api.lorem.space/image/movie?w=150&h=220&hash=8B7BCD'}
+      />
+      <Movie
+        imageUrl={'https://api.lorem.space/image/movie?w=150&h=220&hash=8CD'}
+      />
+    </section>
+  );
+}
+
+
+
+```
+
+---
+layout: center
+---
+
+# State
+
+
+---

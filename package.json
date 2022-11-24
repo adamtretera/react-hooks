@@ -10,6 +10,7 @@
     "@slidev/cli": "^0.36.5",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*",
+    "@stackblitz/sdk": "^1.8.1",
     "slidev-theme-geist": "^0.8.1"
   }
 }
