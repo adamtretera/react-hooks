@@ -132,3 +132,90 @@ export default function MyApp() {
 <div className="flex justify-center">
 <img className="w-1/2 rounded-sm" src="/images/movies.png"/>
 </div>
+
+---
+
+
+---
+
+# Next.js
+
+```bash
+npx create-next-app@latest --ts
+
+```
+
+- jednoduchý file based route systém
+- automatický code spliting
+- pre-rendering (o tom později)
+- [next dokumentace](https://nextjs.org/)
+
+---
+
+# Routes
+
+- v nextu je stránka, kalasická react komponenta, která je ve složce `pages`
+- např. `pages/moje-portfolio.tsx` 
+- nyní bude v aplikaci dostupný /moje-portfolio
+- `pages/index.tsx` je pro `/`
+
+
+```tsx
+export default function MojePortfolio() {
+  return <h1>Moje projekty</h1>
+}
+
+```
+
+---
+
+# Link
+
+- slouží pro přechod z jedné stránky na jinou
+
+```tsx
+  <Link href="/">Home</Link>
+```
+
+
+
+```tsx
+import Link from 'next/link'
+
+function Navbar() {
+  return (
+    <div>
+      <Link href="/">Dashbaord</Link>
+      <Link href="/eshop">Eshop</Link>
+    </div>
+  )
+}
+```
+
+---
+
+
+# Úkol - vytvořte next appku
+- vytvořte next appku
+- s navigací mezi stránkami 
+- `About`, `Projects`, `Contact`
+
+  
+---
+
+# Stylování
+
+- co jsme si ukázali (inline)
+- CSS in JS
+- modules
+- tailwind 
+
+---
+
+# CSS in JS
+- pro reagování na stav komponenty
+- atomické třídy
+- předcházení kolizí
+- DX 
+
+
