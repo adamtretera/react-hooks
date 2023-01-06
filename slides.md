@@ -218,4 +218,147 @@ function Navbar() {
 - předcházení kolizí
 - DX 
 
+---
+
+# Zástupci
+- [styled-components](https://styled-components.com/docs/basics) 💅 
+  - nejrozšířenější
+- [emotion](https://emotion.sh/docs/introduction)
+- [stitchescss](https://stitches.dev/)
+  - můj oblíbenec 
+- [felacss](https://fela.js.org/)
+
+---
+
+# Styled coponents
+
+```jsx
+const Button = styled.button`
+  /* Adapt the colors based on primary prop */
+  background: ${props => props.primary ? "palevioletred" : "white"};
+  color: ${props => props.primary ? "white" : "palevioletred"};
+
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid palevioletred;
+  border-radius: 3px;
+`;
+
+render(
+  <div>
+    <Button>Normal</Button>
+    <Button primary>Primary</Button>
+  </div>
+);
+
+```
+
+---
+
+# Stitches
+
+```jsx
+const Button = styled('button', {
+  padding: "2rem 1rem"
+  //... base styles
+
+  variants: {
+    color: {
+      violet: {
+        backgroundColor: 'blueviolet',
+        color: 'white',
+      },
+      gray: {
+        backgroundColor: 'gainsboro',
+      },
+    },
+  },
+});
+
+() => <Button color="violet">Button</Button>;
+```
+
+--- 
+
+# Modules CSS
+- dobré na začátky
+- klasické css, jen modulární (neřešíte překrývání)
+- lokální scope vlastností
+- nemusíte nic stahovat je přímov v nextu [css-modules](https://github.com/css-modules/css-modules)
+---
+
+# Příklad
+
+- Button.tsx
+- `Button.module.css`
+
+```css
+.error {
+  color: white;
+  background-color: red;
+}
+```
+
+- `Input.module.css`
+
+```css
+.error {
+  color: red;
+  background-color: white;
+}
+```
+
+--- 
+
+
+# Použití v komponentě
+
+```tsx
+import styles from './Button.module.css'
+
+export function Button() {
+  return (
+    <button
+      type="button"
+      className={styles.error}
+    >
+      Remove
+    </button>
+  )
+}
+```
+---
+
+# Tailwind CSS
+
+- atomické třídy
+- co vlastnost, to třída (vlastní config na barvy atp)
+- just in time compiler (co za třídy napíšete do budete mít v bundlu)
+```html
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+  Button
+</button>
+```
+---
+
+# UI knihovny
+- když vás nezajíma design
+- nebo váš osobní projekt
+
+
+# Obecné UI knihovny
+- [antd design](https://ant.design/)
+- [mantine](https://mantine.dev/)
+- [Chakra](https://chakra-ui.coma)
+- MUI
+
+---
+
+# Primitives (headless) komponenty
+- nenastylované komponenty pouze (accessible) - podle aria
+- težší na začátek, ale vyplatí se při custom appce
+- [Radix UI](https://www.radix-ui.com/)
+- [React aria](https://react-spectrum.adobe.com/react-aria/)
+- Reach UI
 
