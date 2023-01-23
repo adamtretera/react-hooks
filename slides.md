@@ -18,7 +18,7 @@ import { useState } from 'react';
 - musí být použit ve komponentě !!!
 ```tsx
 function Card() {
-  const [numberOfLikes, setNumberOfLikes] = useState(0);
+  const [numberOfLikes, setNumberOfLikes] = useState(0);}
 ```
 
 - `numberOfLikes` (první hodnota) - je hodnota stavu  
@@ -132,9 +132,6 @@ export default function MyApp() {
 <div className="flex justify-center">
 <img className="w-1/2 rounded-sm" src="/images/movies.png"/>
 </div>
-
----
-
 
 ---
 
@@ -260,7 +257,7 @@ render(
 
 ```jsx
 const Button = styled('button', {
-  padding: "2rem 1rem"
+  padding: "2rem 1rem",
   //... base styles
 
   variants: {
@@ -361,4 +358,118 @@ export function Button() {
 - [Radix UI](https://www.radix-ui.com/)
 - [React aria](https://react-spectrum.adobe.com/react-aria/)
 - Reach UI
+
+
+---
+
+# Formuláře
+
+```jsx
+<form>
+  <label>
+    Name:
+    <input type="text" name="name" />
+  </label>
+    <label>
+    
+        Heslo:
+        <input type="password" name="password" />
+    </label>
+  <input type="submit" value="Submit" />
+</form>
+```
+
+- typy [inputů](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input) (file, text, number, checkbox, radio, date, email, password
+
+---
+
+# Uncontrolled forms
+- pomocí `useRef()`
+  <Stackblitz source="react-ts-jgrqas" :openFiles="[`components/App.tsx`]" />
+
+---
+
+# useRef()
+- `const ref = useRef(initialValue)`
+- pro přístup k DOM elementům (jejich referenci)
+- ale muže sloužit k jakékoliv vaší vlastní referenci (funkce, objekty)
+<Stackblitz source="react-ts-jgrqas" :openFiles="[`UseRefExample.tsx`]" />
+
+---
+
+
+# Controlled forms
+- pomocí `useState()`
+<Stackblitz source="react-ts-yyzrj8" :openFiles="[`components/App.tsx`]" />
+
+
+---
+
+# Úkol
+- vytvořte přihlašovací formulář (kontrolovaný) (email, heslo, potvrzení hesla, checkbox)
+- pokud uživatel nebude souhlasit s podminkami - nedovolte mu odeslat formulář
+- pokud  heslo a potvrzení hesla nebudou stejná - nedovolte mu odeslat formulář
+- vytvořte select (výběrové menu) - (volby: vyberte, muž, žena, jiné)
+
+
+---
+
+# useEffect()
+`useEffect(setup, dependencies?)`
+- `setup` - je funkce je umístěná logika celého efketu
+- `dependencies` - (nepovinný) - pole závislostí, pokud se změní, tak se spustí `setup` znovu, může obsahovat `props`, `state`  nebo jiné proměnné deifnované v komponentě
+- pokud je pole `dependencies` prázdné [], tak se `setup` spustí jen jednou (při mountu komponenty)
+
+
+```jsx
+
+function ChatRoom({ roomId }) {
+  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
+
+  useEffect(() => {
+  	const connection = createConnection(serverUrl, roomId);
+    connection.connect();
+  	return () => {
+      connection.disconnect();
+  	};
+  }, [serverUrl, roomId]);
+}
+
+```
+
+---
+
+# Použití
+
+- network requesty
+- browser DOM
+- časovač pomocí setInterval() and clearInterval().
+- eventy typu -  window.addEventListener() and window.removeEventListener()
+- animace z externích knihoven
+
+
+```jsx
+
+  useEffect(() => {
+    function handleMove(e) {
+      setPosition({ x: e.clientX, y: e.clientY });
+    }
+    window.addEventListener('pointermove', handleMove);
+    return () => {
+      window.removeEventListener('pointermove', handleMove);
+    };
+  }, []);
+
+```
+---
+
+
+
+# Sledování kurzoru
+
+<Stackblitz source="react-ts-lpj3ry" :openFiles="[`components/App.tsx`]" />
+
+---
+
+
 
