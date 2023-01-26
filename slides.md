@@ -633,7 +633,7 @@ function App() {
 - vytvořit komponentu `CookieClicker`, která bude zvětšovat counter, který se bude nacházet v jiné komponentě
 - obrázek si zvolte sami, ale po najetí myší se obrázek zvětší - použijte `:hover` pseudo selector (transform: scale(1.05);)
 
-<img src="img.png" alt="drawing" width="200"/>
+<img src="/images/img.png" alt="drawing" width="200"/>
 
 
 ---
