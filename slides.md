@@ -363,6 +363,14 @@ export function Button() {
 ---
 
 # Formuláře
+- velmi neoblíbená část frontendového vývoje
+- ale velmi důležitá (Google.com, Facebook.com) 
+- je zde hodně balíčků, které vám usnadní práci (formik, react-hook-form, react-final-form), ale nejsou nezbytné
+
+
+---
+
+# Ukázka formuláře
 
 ```jsx
 <form>
@@ -384,6 +392,7 @@ export function Button() {
 ---
 
 # Uncontrolled forms
+- nenastavujeme `value`
 - pomocí `useRef()`
   <Stackblitz source="react-ts-jgrqas" :openFiles="[`components/App.tsx`]" />
 
@@ -398,11 +407,12 @@ export function Button() {
 ---
 
 
-# Controlled forms
-- pomocí `useState()`
+# Kontrolované formuláře 
+- pomocí `useState("")` - vždy musí obsahovat defaultní hodnotu
+- kontrolované přímo react - pro nás více důležité
 <Stackblitz source="react-ts-yyzrj8" :openFiles="[`components/App.tsx`]" />
 
-
+  
 ---
 
 # Úkol
@@ -414,11 +424,232 @@ export function Button() {
 
 ---
 
+# Kontrolvané formuláře vs Nekontrolvané formuláře
+
+- pokud nastavujeme `value` na inputu, tak je to kontrolvaný formulář (react kontroluje jeho hodnotu)
+- pokud ne, tak je to nekontrolvaný formulář
+- Komponenta by měla vždy být buď kontrolovaná nebo nekontrolovaná, nikdy oběma způsoby
+
+
+--- 
+
+# Častá chyba
+- pokud je formulář kontrolvaný, tak `useState()` musí mít defaultní hodnotu
+```jsx
+function SignupForm() {
+  const [username, setUsername] = React.useState();   // Bez defualtní hodnoty : hodí error (A component is changing an uncontrolled input to be controlled.)
+    
+    return (
+    <form>
+      <label htmlFor="username">
+        Select a username:
+      </label>
+      <input
+        type="text"
+        id="username"
+        value={username}
+        onChange={event => {
+          setUsername(event.target.value);
+        }}
+      />
+    </form>
+  );
+}
+```
+
+---
+
+# Proč ? 
+- je to z toho důvodu, že je to jako kdyby jsme do `value` dávali `undefined`
+- pokud nastavíme hodnotu na `undefined`, tak je to jako kdyby jsme jí vůbec nenastavili (nekontrolovaný formulář)
+```jsx
+const username = undefined; 
+
+<input
+  type="text"
+  id="username"
+  value={username}
+  onChange={event => {
+    setUsername(event.target.value);
+  }}
+/>
+```
+--- 
+
+# Submit formuláře
+- mám formulář
+```tsx
+export function ClickForm({ onSearch }: ISearchFormProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  return (
+    <section>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(event) => {
+          setSearchTerm(event.target.value);
+        }}
+      />
+      <button>Hledej!</button> {/* Chci aby se spustila funkce onSearch */}
+    </section>
+  );
+}
+
+
+```
+
+---
+
+# Pomocí onClick ?
+
+```tsx
+<button onClick={() => onSearch(searchTerm)}>Search!</button>
+```
+- co když ale budu chtít, aby se odeslal na `Enter` ? 
+
+```tsx
+<>
+<input
+    type="text"
+    value={searchTerm}
+    onChange={(event) => {
+        setSearchTerm(event.target.value);
+    }}
+    onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+            onSearch(searchTerm);
+        }
+    }}
+/>
+</>
+```
+- to by šlo, ale budeme vytvářet něco co už prohlížeč dávno umí
+
+
+---
+
+# onSubmit
+- `onSubmit` je event, který se spustí, když se odesílá formulář
+- `event.preventDefault()` - zabrání odeslání formuláře (a tím i refreshu stránky) - dříve takto prohlížeče odkazovaly na stránku, kde byla dostupna stránka s novými daty
+
+```tsx
+const handleSubmit = (event: SyntheticEvent) => {
+    event.preventDefault();
+    onSearch(searchTerm);
+};
+return (
+    <form onSubmit={handleSubmit}>
+        <input
+            type="text"
+            value={searchTerm}
+            onChange={(event) => {
+                setSearchTerm(event.target.value);
+            }}
+        />
+        <button>Hledat!</button>
+    </form>
+)
+```
+
+---
+
+# Props vs State
+- props - vlastnosti komponenty, které jsou nastaveny z vnějšku (podobně jako atributy v HTML)
+```jsx
+<Button variant="secondary">
+```
+- state - pokud chceme aby se něco měnilo
+```jsx
+<Button disabled={isAdmin}>
+```
+- nikdy nemodifikujeme přímo state (pokud chceme změnit stav, tak použijeme `setState`)
+
+
+---
+
+# Props vs State
+
+<Stackblitz source="vitejs-vite-tnte6p" :openFiles="[`src/components/PropsVsState.tsx`]" />
+
+
+
+---
+
+# Examples
+- https://stackblitz.com/edit/vitejs-vite-tnte6p
+- https://stackblitz.com/edit/vitejs-vite-pafk6p (pro pokročilé - přidat funkci na přidání barvy)
+
+---
+
+# Lifting state up
+- pokud chceme mít `state` ve více komponentách - musíme ho přesunout ve struktuře nad ty komponenty pro kterého ho chceme použít
+- přesouváme `state` do komponenty, která je nejvyšší v hierarchii
+```jsx
+<>
+      <header>
+        <a className="logo" href="/">
+            My Fruits
+        </a>
+        <SearchForm />
+      </header>
+      <main>
+        <SearchResults />
+      </main>
+</>
+```
+
+--- 
+
+# Lifting state up
+
+```jsx
+function App() {
+    const [searchTerm, setSearchTerm] = React.useState('');
+
+    return (
+        <>
+            <header>
+                <a className="logo" href="/">
+                    My Fruits
+                </a>
+                <SearchForm
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                />
+            </header>
+            <main>
+                <SearchResults searchTerm={searchTerm} />
+            </main>
+        </>
+    );
+}
+```
+
+---
+
+# Úkol - cookie clicker
+- akceptační kritéria
+- vytvořit komponentu `CookieClicker`, která bude zvětšovat counter, který se bude nacházet v jiné komponentě
+- obrázek si zvolte sami, ale po najetí myší se obrázek zvětší - použijte `:hover` pseudo selector (transform: scale(1.05);)
+
+<img src="img.png" alt="drawing" width="200"/>
+
+
+---
+ 
+# Example
+- https://stackblitz.com/edit/vitejs-vite-z41dfz
+
+---
+
 # useEffect()
 `useEffect(setup, dependencies?)`
 - `setup` - je funkce je umístěná logika celého efketu
 - `dependencies` - (nepovinný) - pole závislostí, pokud se změní, tak se spustí `setup` znovu, může obsahovat `props`, `state`  nebo jiné proměnné deifnované v komponentě
 - pokud je pole `dependencies` prázdné [], tak se `setup` spustí jen jednou (při mountu komponenty)
+
+
 
 
 ```jsx
@@ -435,7 +666,10 @@ function ChatRoom({ roomId }) {
   }, [serverUrl, roomId]);
 }
 
+
 ```
+
+---
 
 ---
 
