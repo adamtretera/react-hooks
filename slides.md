@@ -643,6 +643,20 @@ function App() {
 
 ---
 
+# Side effects
+- při tvorbě aplikace se často chceme (potřebujeme) synchronizovat s externími systémi
+- Např.
+  - Network requests (api)
+  - timeouts / intervals (animace)
+  - braní dat nebo zápis dat do `localStorage`
+  - poslouchání na globální eventy
+- v Reactu jim říkáme side effecty
+- jak to dělat správně ? 💡
+
+
+---
+
+
 # useEffect()
 `useEffect(setup, dependencies?)`
 - `setup` - je funkce je umístěná logika celého efketu
@@ -650,37 +664,103 @@ function App() {
 - pokud je pole `dependencies` prázdné [], tak se `setup` spustí jen jednou (při mountu komponenty)
 
 
+---
 
+# Příklad
 
-```jsx
+```js
+const [count, setCount] = useState(0);
 
-function ChatRoom({ roomId }) {
-  const [serverUrl, setServerUrl] = useState('https://localhost:1234');
-
-  useEffect(() => {
-  	const connection = createConnection(serverUrl, roomId);
-    connection.connect();
-  	return () => {
-      connection.disconnect();
-  	};
-  }, [serverUrl, roomId]);
-}
-
-
+useEffect(() => {
+ document.title = count.toString();
+}, [count]);
 ```
 
 ---
 
+# Úkol - reagování na změnu
+
+- vytvořte formulář
+```ts
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+```
+- v moment kdy se změní jméno nebo heslo vypište ho do konzole
+
 ---
 
-# Použití
+# useEffect - on mount
+- když chci aby se stalo něco na mount komponenty (zobrazení)
+- bacha ve strict modu se provede 2x
+```tsx
+  useEffect(() => {
+    console.log('Aya 👻');
+  }, []);
+```
 
-- network requesty
-- browser DOM
-- časovač pomocí setInterval() and clearInterval().
-- eventy typu -  window.addEventListener() and window.removeEventListener()
-- animace z externích knihoven
+---
 
+# Příklad - on mount 
+
+- Focus input na on mount
+- https://stackblitz.com/edit/react-ts-yamf3d
+
+
+---
+
+# Úkol - on mount
+- přidat na okno (window) event 
+- pomocí funkce `addEventListener`
+- event `resize` => který bude volat funkci handleResize, kde změní stav
+```jsx
+setScreenSize({
+  width: window.innerWidth,
+  height: window.innerHeight,
+});
+```
+---
+
+# useEffect - clean up
+
+- zavolá se v moment, kdy se komponenta unmountuje (schová se)
+
+```tsx
+useEffect(() => {
+      return () => console.log('Aya 👻');
+}, []);
+```
+
+---
+
+# Example - clean up
+- https://stackblitz.com/edit/react-ts-yamf3d?file=CleanUp.tsx
+
+---
+
+# Úkol - clean up
+- opravte předešlé cvičení
+- smažte event listener pomocí funkce `removeEventListener` na onmount komponenty
+- vyzkoušejte: přidejte logiku, kdy se komponeta zobrazí. (např. checkbox)
+
+
+---
+
+# Api
+```jsx
+let [dogImage, setDogImage] = useState(null)
+
+useEffect(() => {
+  fetch("https://dog.ceo/api/breeds/image/random")
+          .then(response => response.json())
+          .then(data => setDogImage(data.message))
+},[])
+```
+
+
+
+---
+
+# DOM
 
 ```jsx
 
