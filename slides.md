@@ -786,6 +786,47 @@ useEffect(() => {
 
 ---
 
+# Custom hooks
+- vytvoříme si vlastní hook
+```tsx
+function useTime() {
+  const [time, setTime] = React.useState(
+    new Date()
+  );
+  
+  React.useEffect(() => {
+    // Effect logic
+    const intervalId = window.setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+  
+  return time;
+}
+```
+
+# Custom hook - cvičení
+- vytvořte si custom hook `useToggle`
+```tsx
+import React from 'react';
+
+function useToggle() {
+  // TODO: Fill me in!
+}
+
+export default useToggle;
+
+
+```
+
+- bere jako parametr `initialValue` (boolean)
+
+---
+
 # Fetch
 - moderní náhrada za `XMLHttpRequest`
 
