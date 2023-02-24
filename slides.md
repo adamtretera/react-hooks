@@ -783,7 +783,222 @@ useEffect(() => {
 
 <Stackblitz source="react-ts-lpj3ry" :openFiles="[`components/App.tsx`]" />
 
+
 ---
 
+# Fetch
+- moderní náhrada za `XMLHttpRequest`
 
+- vracení dat
+```js
+async function getData() {
+  const response = await fetch('/api/data');
+  const json = await response.json();
+  // `json` data jsou vácená ve formátu JSON z API
+}
+```
+
+- voláme funkci `fetch` s API endpointem => `/api/data`
+- fetch je založený na promisech
+- čekáme na vrácení response pomocí `await`
+- `response` je objekt ve kterým se nachází hlavičky a status cody
+
+
+---
+
+# Fetch - možnosti requestu
+- defaultně je `GET` request
+- `GET` `POST` `PUT` `PATCH` `DELETE`
+```ts
+async function submitData() {
+  const response = await fetch('/api/data', {
+    method: 'POST',
+  });
+  const json = await response.json();
+}
+```
+
+---
+
+# Fetch - možnosti requestu
+- druhý argument nám slouží k nastavení ruzných možností
+
+
+```ts
+async function submitData() {
+  const response = await fetch('/api/data', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'bearer abc123',
+      // nastavení hlavičky (authetication)
+    },
+  });
+  const json = await response.json();
+}
+```
+
+---
+
+# Fetch - query params
+- když provádíme requesty na API, tak se často používají query params
+- často pro `GET` requesty
+- query params jsou v url za `?` a oddělené `&` (key=value)
+```ts
+async function search({ name, city }) {
+  const url = `/api/search?name=${name}&city=${city}`;
+
+  const response = await fetch(url);
+  const json = await response.json();
+}
+```
+
+---
+
+# Fetch - body params
+- často pro POST/PUT/PATCH/DELETE requesty
+```ts
+async function login({ username, password }) {
+  const response = await fetch(`/api/login`, {
+    method: 'POST',
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+  });
+
+  const json = await response.json();
+}
+
+```
+- musíme nejdříve převést data na string (protože můžeme posílat po síti pouze stringy)
+- `JSON.stringify` převede objekt na string
+- `JSON.parse` převede string na objekt - toto palk použije Backend (server)
+
+---
+
+# React fetch - on event
+
+```ts
+  const [email, setEmail] = React.useState('');
+  const [message, setMessage] = React.useState('');
+  
+  const [status, setStatus] = React.useState('idle');
+  
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setStatus('loading');
+
+    const response = await fetch(ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        message,
+      }),
+    });
+    const json = await response.json();
+
+    if (json.ok) { setStatus('success'); setMessage(''); } else {
+      setStatus('error');
+    }}
+  
+```
+
+
+# React fetch - on mount
+
+```tsx
+  const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const response = await fetch(ENDPOINT);
+        const json = await response.json();
+        setData(json);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+```
+
+
+# React fetch - production ready
+
+```tsx
+  const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const response = await fetch(ENDPOINT);
+        const json = await response.json();
+        setData(json);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+```
+
+---
+
+# React fetch - useSWR()
+
+```tsx
+  const { data, error } = useSWR(ENDPOINT, fetcher);
+
+  console.log(data, error);
+
+return (
+        <p>
+          Current temperature:
+          {typeof data?.temperature === 'number' && (
+                  <span className="temperature">
+          {data.temperature}°C
+        </span>
+          )}
+        </p>
+);
+```
+
+---
+
+# React fetch - useSWR() - fetcher
+
+```ts
+// fetcher 
+async function fetcher(endpoint) {
+  const response = await fetch(endpoint);
+  const json = await response.json();
+  
+  return json;
+}
+```
+
+---
+
+# Úkol - fetch
+- pokédex :)) 
+- vytvořte applikaci - kde se vypíšou pokemoni v kartičkách
+- na každé kartičce bude obrázek, jméno a typ
+- po kliknutí na kartičku se zobrazí detail pokémona (nový route)
+- detail pokémona bude obsahovat obrázek, jméno, typy, výšku, váhu, popis
+- použijte API https://pokeapi.co/
+- vytovřte nový projekt - (nextjs) - uložte na github
+- Bonus - přidejte možnost vyhledávání pokémonů (v navbaru)
 
