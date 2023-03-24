@@ -809,6 +809,8 @@ function useTime() {
 }
 ```
 
+---
+
 # Custom hook - cvičení
 - vytvořte si custom hook `useToggle`
 ```tsx
@@ -824,6 +826,7 @@ export default useToggle;
 ```
 
 - bere jako parametr `initialValue` (boolean)
+- shown, toggle, setShown, 
 
 ---
 
@@ -944,6 +947,7 @@ async function login({ username, password }) {
   
 ```
 
+---
 
 # React fetch - on mount
 
@@ -1042,4 +1046,272 @@ async function fetcher(endpoint) {
 - použijte API https://pokeapi.co/
 - vytovřte nový projekt - (nextjs) - uložte na github
 - Bonus - přidejte možnost vyhledávání pokémonů (v navbaru)
+
+
+
+
+---
+
+# Opakování - useEffect()
+
+- api s kterým budete pracovat [api](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+```tsx
+// Uložení do localstorage
+window.localStorage.set('is-dark-mode');
+
+// Vrácení hodnoty
+window.localStorage.getItem('is-dark-mode');
+```
+
+- Hodnota `isDarkMode` by měla být uložena v local storage pokaždé když se změní pomocí `useEffectu`
+- Prvotní hodnota `isDarkMode` by se měla brát z `localstorage` (nebo nastavená na `false` pokud nemá žádnou hodnotu)
+- klíč v `localstorage` může být například `"is-dark-mode”`
+
+---
+
+# Opakování - localStorage
+- Položky uložené v `localStorage` jsou vždy uloženy jako řetězec. Budete muset převést uloženou hodnotu zpět na boolean. To můžete udělat pomocí `JSON.parse()`
+```jsx
+<div className="wrapper">
+      <button
+        style={{
+          border: 'none',
+          backgroundColor: isDarkMode ? 'black' : 'white',
+          color: isDarkMode ? 'white' : 'black',
+        }}
+        aria-label="Dark Mode"
+        // TODO: onClick={}
+      >
+        Toggle
+        {isDarkMode ? ' 🌑' : ' 🔆'}
+      </button>
+    </div>
+```
+
+---
+
+# useContext
+- `useContext` umožňuje vnořeným komponentám přístup k datům (tzv. kontextu), které jsou poskytovány rodičovskou komponentou.
+- Kontext může být použit pro předání dat, které jsou společné pro několik komponent v hierarchii.
+
+```tsx
+const ThemeSwitcher = () => {
+  const { theme } = useContext(ThemeContext);
+  
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+    </div>
+  );
+};
+```
+
+---
+
+# useContext - řešení prop drillingu
+- Použitím useContext můžeme předcházet tzv. "prop drilling", což je situace, kdy musíme předávat data z rodičovských komponent do vnořených komponent pomocí 
+
+```jsx
+          <div>
+            <h1>My App</h1>
+            <UserProfile data={userData} />
+            <UserSettings
+                    data={userData}
+                    handleNameChange={handleNameChange}
+                    handleAgeChange={handleAgeChange}
+            />
+          </div>
+```
+
+
+---
+
+# useContext - příklad (vytvoření kontextu)
+- nejprve typy vytvoříme kontext
+```tsx
+type AppContextType = {
+  user: User | null;
+  setUser: (user: User | null) => void;
+};
+
+export const AppContext = createContext<AppContextType>({
+  user: null,
+  setUser: () => {},
+});
+```
+
+---
+
+# useContext - příklad (vytvoření provideru)
+
+```tsx
+import React, { useState } from "react";
+import { AppContext } from "./AppContext";
+
+function AppProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  return (
+    <AppContext.Provider value={{ user, setUser }}>
+      {children}
+    </AppContext.Provider>
+  );
+}
+```
+
+---
+
+# useContext - příklad (použití)
+
+```tsx
+import React, { useContext } from "react";
+import { AppContext } from "./AppContext";
+
+const ProfileCard = () => {
+  const { user } = useContext(AppContext);
+
+  return (
+    <div>
+      {user ? (
+        <>
+          <h2>{user.name}</h2>
+          <p>Age: {user.age}</p>
+          <p>Email: {user.email}</p>
+        </>
+      ) : (
+        <p>No user found.</p>
+      )}
+    </div>
+  );
+};
+```
+
+---
+
+# Úkol - useContext
+
+- napojte vaší aplikaci na `localStorage` theme pomocí `useContext`
+- `ThemeContext`, který obsahuje objekt `theme` a funkci `setTheme`
+- `ThemeProvider`, který je zodpovědný za ukládání tématu v `localStorage`
+- `useTheme`, který získává hodnoty `theme` a `setTheme` z kontextu a vrací je jako objekt
+
+---
+
+# useReducer 
+
+- `useReducer` je hook v Reactu, který umožňuje spravovat stav aplikace pomocí reduceru.
+- Reducer je funkce, která bere aktuální stav a akci a vrací nový stav.
+- Použitím `useReducer` můžeme oddělit správu stavu od komponenty a snížit tak závislost na životním cyklu Reactu.
+
+---
+
+# useReducer - Jak ho použít (typy) ?
+
+```tsx
+type StateType = {
+  todos: { id: number; text: string; done: boolean }[];
+};
+
+type ActionType =
+  | { type: "add"; text: string }
+  | { type: "toggle"; id: number }
+  | { type: "delete"; id: number };
+```
+
+---
+
+# useReducer - Jak ho použít (reducer) ?
+
+```tsx
+const reducer = (state: StateType, action: ActionType): StateType => {
+  switch (action.type) {
+    case "add":
+      return {
+        todos: [
+          ...state.todos,
+          { id: Date.now(), text: action.text, done: false },
+        ],
+      };
+    case "toggle":
+      return {
+        todos: state.todos.map((todo) =>
+          todo.id === action.id ? { ...todo, done: !todo.done } : todo
+        ),
+      };
+    case "delete":
+      return {
+        todos: state.todos.filter((todo) => todo.id !== action.id),
+      };
+    default:
+      throw new Error("Unexpected action");
+  }
+};
+```
+
+
+---
+
+# useReducer - Jak ho použít (použití) ?
+- bere jako první argument funkci reduceru a jako druhý argument počáteční stav.
+- `useReducer` vrací dva prvky: aktuální stav a funkci pro dispatchování akcí.
+
+```tsx
+const [state, dispatch] = useReducer(reducer, { todos: [] });
+```
+
+
+--- 
+
+# useReducer - vytvoření dispatch funkcí
+
+```tsx
+const handleAddTodo = () => {
+  if (newTodo !== "") {
+    dispatch({ type: "add", text: newTodo });
+    setNewTodo("");
+  }
+};
+
+const handleToggleTodo = (id: number) => {
+  dispatch({ type: "toggle", id });
+};
+
+const handleDeleteTodo = (id: number) => {
+  dispatch({ type: "delete", id });
+};
+```
+---
+
+# useReducer - v komponentě
+
+```tsx
+return (
+  <div>
+    <ul>
+      {state.todos.map((todo) => (
+        <li
+          key={todo.id}
+          onClick={() => handleToggleTodo(todo.id)}
+          style={{ textDecoration: todo.done ? "line-through" : "none" }}
+        >
+          {todo.text}
+          <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
+        </li>
+      ))}
+    </ul>
+    <input
+      type="text"
+      value={newTodo}
+      onChange={(e) => setNewTodo(e.target.value)}
+    />
+    <button onClick={handleAddTodo}>Add Todo</button>
+  </div>
+);
+```
+
+
+# Úkol - useReducer
+
+
+
 
