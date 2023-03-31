@@ -1069,7 +1069,7 @@ window.localStorage.getItem('is-dark-mode');
 
 ---
 
-# Opakování - localStorage
+# Opakování - localStorage (ukol nebude fungovat v Nextu - z důvodu, že je server side rendered)
 - Položky uložené v `localStorage` jsou vždy uloženy jako řetězec. Budete muset převést uloženou hodnotu zpět na boolean. To můžete udělat pomocí `JSON.parse()`
 ```jsx
 <div className="wrapper">
@@ -1161,6 +1161,23 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 
 ---
 
+
+# useContext - příklad (použití provideru)
+
+`<AppContext.Provider>` musí být nad komponentou, která používá volání useContext(). 
+```tsx
+function MyPage() {
+  return (
+          <AppProvider>
+            <App /> // Tady nyní můžu používat 
+          </AppProvider>
+  );
+}
+```
+
+
+---
+
 # useContext - příklad (použití)
 
 ```tsx
@@ -1188,14 +1205,40 @@ const ProfileCard = () => {
 
 ---
 
+# Další příklad použití
+
+```tsx
+import { useContext } from 'react';
+
+function Button() {
+  const theme = useContext(ThemeContext)
+  // rest of the component
+}
+
+
+function MyPage() {
+  return (
+          <ThemeContext.Provider value="dark">
+            <SubmitForm /> 
+            // Tady můžu používat tlačítko
+          </ThemeContext.Provider>
+  );
+}
+```
+
+
+
+
+---
+
 # Úkol - useContext
 
-- napojte vaší aplikaci na `localStorage` theme pomocí `useContext`
 - `ThemeContext`, který obsahuje objekt `theme` a funkci `setTheme`
-- `ThemeProvider`, který je zodpovědný za ukládání tématu v `localStorage`
 - `useTheme`, který získává hodnoty `theme` a `setTheme` z kontextu a vrací je jako objekt
 
 ---
+
+
 
 # useReducer 
 
@@ -1309,8 +1352,53 @@ return (
 );
 ```
 
+# useReducer 
+
+```tsx
+import { useReducer } from 'react';
+
+type State = {
+  age: number;
+};
+
+type Action = {
+  type: 'incremented_age';
+};
+
+function reducer(state: State, action: Action): State {
+  if (action.type === 'incremented_age') {
+    return {
+      age: state.age + 1
+    };
+  }
+  throw new Error('Unknown action.');
+}
+
+export default function Counter() {
+  const [state, dispatch] = useReducer(reducer, { age: 42 });
+
+  return (
+    <>
+      <button onClick={() => {
+        dispatch({ type: 'incremented_age' })
+      }}>
+        Increment age
+      </button>
+      <p>Hello! You are {state.age}.</p>
+    </>
+  );
+}
+
+```
+
+
+
+
 
 # Úkol - useReducer
+- Postavte aplikaci košíku na nákupy: Sestavte e-commerce aplikaci košíku na nákupy pomocí Reactu a Reduceru. Aplikace by měla umožňovat uživatelům přidávat položky do košíku, upravovat množství a přejít k objednávce. Pomocí Reduceru spravujte stav košíku.
+- akceptační kritéria:
+- přidávání, odebírání, množství, typ, smazat vše...
 
 
 
