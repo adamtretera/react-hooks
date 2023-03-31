@@ -1392,7 +1392,7 @@ export default function Counter() {
 ```
 
 
-
+---
 
 
 # Úkol - useReducer
