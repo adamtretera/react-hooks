@@ -1401,5 +1401,331 @@ export default function Counter() {
 - přidávání, odebírání, množství, typ, smazat vše...
 
 
+---
+
+# useReducer + useContext
+- `useReducer` a `useContext` lze použít společně ke globální správě stavu a akcí.
+- `useReducer` slouží k vytvoření funkce `reducer`, která zpracovává aktualizace stavu na základě akcí.
+- `useContext` slouží k vytvoření objektu `kontextu`, ke kterému mohou přistupovat komponenty v aplikaci.
+- `useReducer` se předává do `value` hodnoty objektu `useContext`, což umožňuje, aby ke `stavu` a `dispatch` funkcím měla přístup jakákoli komponenta, která se přihlásí ke kontextu (pomocí provideru).
+- Tento přístup je užitečný, když je třeba sdílet stav a akce mezi více komponentami v aplikaci, čímž se zabrání prop drillingu.
+
+---
+
+# useReducer + useContext 
+<div className="flex justify-center">
+<img className="w-1/2 rounded-sm" src="/images/context.png"/>
+</div>
+
+---
+
+# useReducer + useContext - vytvoření typu
+
+```tsx
+import React, { useReducer, useContext, createContext } from 'react';
+
+type State = {
+  count: number;
+};
+
+type Action = {
+  type: 'increment' | 'decrement';
+  payload?: number;
+};
+
+type ContextType = {
+  state: State;
+  dispatch: React.Dispatch<Action>;
+};
+
+```
+
+---
+
+# useReducer + useContext - vytvoření reduceru
+
+```tsx
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'increment':
+      return {
+        ...state,
+        count: state.count + (action.payload ?? 1),
+      };
+    case 'decrement':
+      return {
+        ...state,
+        count: state.count - (action.payload ?? 1),
+      };
+    default:
+      return state;
+  }
+};
+
+```
+
+---
+
+# useReducer + useContext - vytvoření kontextu
+
+```tsx
+const initialState: State = {
+  count: 0,
+};
+
+const CounterContext = createContext<ContextType>({
+  state: initialState,
+  dispatch: () => {},
+});
+
+```
+
+---
+
+# useReducer + useContext - vytvoření provideru
+
+```tsx
+const CounterProvider: React.FC = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <CounterContext.Provider value={{ state, dispatch }}>
+      {children}
+    </CounterContext.Provider>
+  );
+};
+    
+``` 
+
+---
+
+# useReducer + useContext -  zobrazení stavu
+
+```tsx
+const CounterDisplay: React.FC = () => {
+  const { state } = useContext(CounterContext);
+
+  return <div>Count: {state.count}</div>;
+};
+```
+
+---
+
+# useReducer + useContext - změna stavu
+
+```tsx
+const CounterButtons: React.FC = () => {
+  const { dispatch } = useContext(CounterContext);
+
+  const handleIncrement = () => {
+    dispatch({ type: 'increment', payload: 2 });
+  };
+
+  const handleDecrement = () => {
+    dispatch({ type: 'decrement' });
+  };
+
+  return (
+    <div>
+      <button onClick={handleIncrement}>Increment</button>
+      <button onClick={handleDecrement}>Decrement</button>
+    </div>
+  );
+};
+
+```
+---
+
+# useReducer + useContext - použití
+
+```tsx
+const App = () => {
+  return (
+    <CounterProvider>
+      <CounterDisplay />
+      <CounterButtons />
+    </CounterProvider>
+  );
+};
+
+export default App;
+```
+
+---
+
+# useReducer + useContext - immutable 
+- Imutability je princip, který říká, že neměníme stav, ale vždy vytváříme nový stav.
+- 🚩Stav je pouze pro čtení. Neměňte žádné objekty ani pole ve stavu:
+```tsx
+function reducer(state, action) {
+  switch (action.type) {
+    case 'incremented_age': {
+      state.age = state.age + 1;
+      return state;
+    }
+```
+✅ Takto se to dělá:
+```tsx
+function reducer(state, action) {
+  switch (action.type) {
+    case 'incremented_age': {
+      return {
+        ...state,
+        age: state.age + 1
+      };
+    }
+```
 
 
+
+---
+
+# Redux - co to je?
+- knihovna pro správu stavu aplikace, která obsahuje centrální úložiště stavu aplikace nazývané `store` a funkce pro aktualizaci stavu pomocí akcí.
+```bash
+npm install @reduxjs/toolkit react-redux
+```
+
+- `reducer` je funkce, která přijímá aktuální stav aplikace a akci, která se má provést, a vrací nový stav aplikace.
+- `store` je centrální úložiště stavu aplikace, které je přístupné z jakéhokoli místa v aplikaci.
+- `action` je objekt, který popisuje, co se má provést. Akce musí mít vždy `type` a mohou mít i další vlastnosti.
+---
+
+# Redux 
+
+<div className="flex justify-center">
+<img className="w-1/2 rounded-sm" src="/images/redux.gif"/>
+</div>
+
+
+---
+
+# Redux - vytvoření intial hodnot (store.ts)
+```tsx
+interface CounterState {
+  value: number;
+}
+
+const initialState: CounterState = {
+  value: 0,
+};
+```
+---
+
+# Redux - vytvoření reduceru akcí pro Todos (store.ts)
+
+```tsx
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  reducers: {
+    increment: (state) => {
+      state.value++;
+    },
+    decrement: (state) => {
+      state.value--;
+    },
+    incrementByAmount: (state, action) => {
+      state.value += action.payload;
+    },
+  },
+});
+```
+---
+
+# Redux - vytvoření store (store.ts)
+
+```tsx
+export const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    // další reducer
+  },
+});
+
+export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+
+
+
+---
+
+# Redux - vytvoření provideru (App.tsx)
+
+```tsx
+import { Provider } from 'react-redux';
+import { store } from './store';
+
+function App() {
+  return (
+          <Provider store={store}>
+            // your app components
+          </Provider>
+  );
+}
+```
+---
+
+# Redux - vytvoření komponenty (Counter.tsx)
+
+```tsx
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, increment } from './store';
+
+function Counter() {
+  const dispatch = useDispatch();
+  const value = useSelector((state: RootState) => state.counter.value);
+
+  const handleIncrement = () => {
+    dispatch(increment());
+  };
+
+  return (
+          <div>
+            <p>{value}</p>
+            <button onClick={handleIncrement}>Increment</button>
+          </div>
+  );
+}
+```
+
+
+---
+
+# Redux - Immutability
+- Redux toolkit v createSlice používá `Immer`
+- `Immer` vytvoří pracovní verzi stavu, kterou můžete přímo upravovat, a na základě těchto změn vytvoří nový neměnný stav.
+- `Immer` usnadňuje psaní stručných a srozumitelných reducerů
+```tsx
+  reducers: {
+    addItem(state, action: PayloadAction<CartItem>) {
+      const item = state.items.find((item) => item.id === action.payload.id);
+      if (item) {
+        item.quantity++;
+      } else {
+        state.items.push({ ...action.payload, quantity: 1 });
+      }
+      state.total += action.payload.price;
+    }
+}
+```
+---
+
+
+# Úkol - vytvoření apliakce na generování hesel
+- vytvořte aplikaci, která bude generovat hesla
+- uživatel může zadat délku hesla, může si vybrat zda chce použít malá písmena, velká písmena, čísla a speciální znaky
+- toto nastavení se uloží do globálního stavu aplikace
+- použijte `useReducer` a `useContext` nebo `Redux`
+```tsx
+const initialState: PasswordState = {
+  value: '',
+  length: 10,
+  includeUppercase: true,
+  includeNumbers: true,
+  includeSymbols: true,
+};
+```
